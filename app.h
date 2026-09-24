@@ -11,13 +11,18 @@
 extern HANDLE         g_hWakeEvent;
 extern std::atomic<bool> g_NeedRepaint;
 
+struct ID3D11Device;
+ID3D11Device* App_GetD3DDevice();
+
 // Wake the idle loop so it renders one more VSync'd frame.
 void RequestRepaint();
 
 enum class Page : int {
     Home = 0,
-    Settings = 1,
+    MediaPlayer = 1,
+    Settings = 2,
 };
+
 
 struct AppState {
     Page  page = Page::Home;

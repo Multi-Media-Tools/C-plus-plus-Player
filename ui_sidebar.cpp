@@ -13,9 +13,11 @@ struct ButtonAnimState {
 };
 
 static ButtonAnimState s_btnHome;
+static ButtonAnimState s_btnMediaPlayer;
 static ButtonAnimState s_btnSettings;
 static ButtonAnimState s_btnToggle;
 static bool s_buttonsFading = false;
+
 
 static inline ImVec4 LerpColor(const ImVec4& a, const ImVec4& b, float t) {
     return ImVec4(
@@ -192,6 +194,20 @@ void RenderSidebar(ImVec2 size) {
         }
         if (ImGui::IsItemHovered())
             ImGui::SetTooltip("Home");
+    }
+
+    ImGui::Spacing();
+
+    // --- Media Player chip ---
+    {
+        bool active = (g_App.page == Page::MediaPlayer);
+        const char* label = collapsed ? "M" : "  Media Player";
+        if (ChipButton(s_btnMediaPlayer, "##mediaplayer", label, ImVec2(btnW, btnH), active)) {
+            g_App.page = Page::MediaPlayer;
+            RequestRepaint();
+        }
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Media Player");
     }
 
     // --- Settings pinned at BOTTOM ---

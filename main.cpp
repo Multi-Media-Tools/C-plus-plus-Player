@@ -3,6 +3,7 @@
 // (wallpaper blur, like the title bar) shows through the whole window.
 #include "app.h"
 #include "worker.h"
+#include "ui_mediaplayer.h"
 
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -50,6 +51,11 @@ static ID3D11Device*           g_pd3dDevice = nullptr;
 static ID3D11DeviceContext*    g_pd3dDeviceContext = nullptr;
 static IDXGISwapChain*         g_pSwapChain = nullptr;
 static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
+
+ID3D11Device* App_GetD3DDevice() {
+    return g_pd3dDevice;
+}
+
 
 static void CreateRenderTarget() {
     ID3D11Texture2D* pBackBuffer = nullptr;
@@ -408,6 +414,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     }
 
     Worker_Shutdown();
+    MediaPlayer_Shutdown();
 
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();

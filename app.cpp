@@ -1,6 +1,7 @@
 #include "app.h"
 #include "ui_sidebar.h"
 #include "ui_homepage.h"
+#include "ui_mediaplayer.h"
 #include "ui_settings.h"
 #include "worker.h"
 #include "imgui.h"
@@ -105,6 +106,7 @@ void App_Init() {
     App_ApplyDarkTheme();
     g_App.sidebarWidth = 260.0f;
     g_App.sidebarTargetWidth = 260.0f;
+    MediaPlayer_Init();
 }
 
 static float s_splitterAlpha = 0.0f;
@@ -112,6 +114,8 @@ static bool  s_splitterFading = false;
 
 bool App_WantsContinuousFrames() {
     if (Worker_IsRunning())
+        return true;
+    if (MediaPlayer_IsScanning())
         return true;
     if (Sidebar_IsAnimating())
         return true;
@@ -251,10 +255,13 @@ void App_RenderFrame() {
     // --- Content panel (empty for now) ---
     ImGui::SameLine(0, 4);
     ImGui::BeginChild("##Content", ImVec2(0, 0),
-        ImGuiChildFlags_Borders | ImGuiChildFlags_AlwaysUseWindowPadding);
+        ImGuiChildFlags_Borders | ImGuiChildFlags_AlwaysUseWindowPadding,
+        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     ImVec2 cAvail = ImGui::GetContentRegionAvail();
     if (g_App.page == Page::Home)
         RenderHomepage(cAvail);
+    else if (g_App.page == Page::MediaPlayer)
+        RenderMediaPlayerPage(cAvail);
     else
         RenderSettingsPage(cAvail);
     ImGui::EndChild();
